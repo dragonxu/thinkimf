@@ -20,7 +20,7 @@ class Message extends AuthBase
      */
     public function pushTo()
     {
-
+        
     }
 
     /*
