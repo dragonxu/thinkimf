@@ -120,7 +120,7 @@ class User extends Base
      */
     public function setUser()
     {
-        $returnVal = ['code' => 101, 'msg' => 'Fail'];
+        $returnVal = ['code' => 101, 'msg' => '失败'];
         $params = $this->request->post();
         if ($params) {
             $must_key = ['username','email','city'];
@@ -139,7 +139,7 @@ class User extends Base
                 $userInfo->sign = $params['sign'];
                 $userInfo->save();
                 $returnVal['code'] = 1;
-                $returnVal['msg'] = 'Success';
+                $returnVal['msg'] = '成功';
 
             }
         }
@@ -191,7 +191,7 @@ class User extends Base
      * @throws \think\exception\DbException
      */
     public function setPass(){
-        $returnVal = ['code' => 101, 'msg' => 'Fail'];
+        $returnVal = ['code' => 101, 'msg' => '失败'];
         $params = $this->request->post();
         if ($params) {
             $must_key = ['nowpass','pass','repass'];
@@ -207,12 +207,12 @@ class User extends Base
                     $userInfo->password = md5($params['pass']);
                     $userInfo->save();
                     $returnVal['code'] = 1;
-                    $returnVal['msg'] = 'Success';
+                    $returnVal['msg'] = '修改成功';
                 }else{
-                    $returnVal['msg'] = '兩次密碼不一致';
+                    $returnVal['msg'] = '两次秘密不一样';
                 }
             }else{
-                $returnVal['msg'] = '原密碼錯誤';
+                $returnVal['msg'] = '原密码错误';
             }
         }
         return $this->json($returnVal);

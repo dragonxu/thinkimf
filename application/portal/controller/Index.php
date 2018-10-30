@@ -22,8 +22,9 @@ class Index extends Base
 //            'msg' => 'welcome',
 //            'data' => []
 //        ]);
-        $this->assign('title', '首页');
-        return $this->fetch('index/index');
+        return $this->fetch('index/index',[
+            'title'=>'ThinkIMF基于PHP7与ThinkPHP的管理框架'
+        ]);
     }
 
     public function aboutus()
