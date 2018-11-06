@@ -20,7 +20,7 @@ class Message extends AuthBase
      */
     public function pushTo()
     {
-
+        
     }
 
     /*
@@ -48,7 +48,7 @@ class Message extends AuthBase
     public function messageList()
     {
         $condition['uuid'] = $this->request->get('user_id', session('userid'));
-        $device_id = $this->request->get('device_id', false);
+        $device_id = $this->reque3st->get('device_id', false);
         $page = $this->request->get('page', 1);
         $limit = $this->request->get('limit', 10);
         if ($device_id) {
@@ -60,15 +60,16 @@ class Message extends AuthBase
             'count' => '',
             'data' => []
         ];
-        $offset = ($page-1) *$limit;
+        $offset = ($page - 1) * $limit;
         $messageModel = new Messages();
         $messageCount = $messageModel->where($condition)
             ->count();
         $messages = Messages::Where($condition)
-            ->limit($offset,$limit)
+            ->limit($offset, $limit)
             ->select()->toArray();
         $result['count'] = $messageCount;
-        $result['data'] = $messages;
+        $result['data'] =
+            $messages;
         return $this->json($result);
     }
 
@@ -77,6 +78,37 @@ class Message extends AuthBase
      */
     public function msgDetail()
     {
+        $msgId = $this->request->get("id", 0);
+        if ($msgId) {
+            $condition = ['id' => $msgId];
+        };
+        $message = Messages::Where($condition)
+            ->select()->toArray();
+        $result = [
+            'code' => 1,
+            'msg' => 'ok',
+            'data' => $message
+        ];
+        return $this->json($result);
+    }
 
+    /**
+     * @desc 将信息删除
+     */
+    public function markDelete()
+    {
+        $msgId = $this->request->get("id", 0);
+        if ($msgId) {
+            $condition = ['id' => $msgId];
+        };
+        $messageModel = new Messages();
+
+
+        $result = [
+            'code' => 1,
+            'msg' => 'ok',
+            'data' => $message
+        ];
+        return $this->json($result);
     }
 }

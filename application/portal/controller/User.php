@@ -2,6 +2,7 @@
 
 namespace app\portal\controller;
 
+use app\admin\model\UserModel;
 use think\Controller;
 use app\portal\controller\Base;
 
@@ -37,11 +38,21 @@ class User extends Base
     public function info()
     {
         if ($this->request->isPost()) {
+
         } else {
             $this->assign('title', '我的信息');
+            $userInfo = [];
             /* $this->assign('description','');
              $this->assign('keywords','');*/
-            return $this->fetch('user/info');
+            if(session('')){
+                $userModel  = new UserModel();
+                $userInfo = $userModel->where(['id'=>session('')['userid']])
+                    ->find()->toArray();
+                if($userInfo){
+                    $userInfo['img'] = 'http://'.$_SERVER['SERVER_NAME'].'/static/uploads/'.$userInfo['img'];
+                }
+            }
+            return $this->fetch('user/setting',['user'=>$userInfo]);
         }
     }
 
@@ -82,12 +93,21 @@ class User extends Base
     public function setting()
     {
         if ($this->request->isPost()) {
+
         } else {
             $this->assign('title', '设置');
+            $userInfo = [];
             /* $this->assign('description','');
              $this->assign('keywords','');*/
-            return $this->fetch('user/setting');
+            if(session('')){
+                $userModel  = new UserModel();
+                $userInfo = $userModel->where(['id'=>session('')['userid']])
+                    ->find()->toArray();
+                if($userInfo){
+                    $userInfo['img'] = 'http://'.$_SERVER['SERVER_NAME'].'/static/uploads/'.$userInfo['img'];
+                }
+            }
+            return $this->fetch('user/setting',['user'=>$userInfo]);
         }
     }
-
 }

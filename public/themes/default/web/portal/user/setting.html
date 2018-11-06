@@ -18,38 +18,38 @@
                         <li class="layui-this" lay-id="info">我的资料</li>
                         <li lay-id="avatar">头像</li>
                         <li lay-id="pass">密码</li>
-                        <li lay-id="bind">帐号绑定</li>
+                        <!--<li lay-id="bind">帐号绑定</li>-->
                     </ul>
                     <div class="layui-tab-content" style="padding: 20px 0;">
                         <div class="layui-form layui-form-pane layui-tab-item layui-show">
-                            <form method="post">
+                            <form method="post" >
                                 <div class="layui-form-item">
                                     <label for="L_email" class="layui-form-label">邮箱</label>
                                     <div class="layui-input-inline">
                                         <input type="text" id="L_email" name="email" required lay-verify="email"
-                                               autocomplete="off" value="" class="layui-input">
+                                               autocomplete="off" value="<?=$user ? $user['email'] : ''?>" class="layui-input">
                                     </div>
-                                    <div class="layui-form-mid layui-word-aux">如果您在邮箱已激活的情况下，变更了邮箱，需<a
+                                   <!-- <div class="layui-form-mid layui-word-aux">如果您在邮箱已激活的情况下，变更了邮箱，需<a
                                             href="activate.html" style="font-size: 12px; color: #4f99cf;">重新验证邮箱</a>。
-                                    </div>
+                                    </div>-->
                                 </div>
                                 <div class="layui-form-item">
                                     <label for="L_username" class="layui-form-label">昵称</label>
                                     <div class="layui-input-inline">
                                         <input type="text" id="L_username" name="username" required
-                                               lay-verify="required" autocomplete="off" value="" class="layui-input">
+                                               lay-verify="username" autocomplete="off" value="<?=$user ? $user['nickname'] : ''?>" class="layui-input">
                                     </div>
                                     <div class="layui-inline">
                                         <div class="layui-input-inline">
-                                            <input type="radio" name="sex" value="0" checked title="男">
-                                            <input type="radio" name="sex" value="1" title="女">
+                                            <input type="radio" name="sex" value="0"  title="男" <?php if($user){if($user['sex']==0){echo 'checked';}}?>>
+                                            <input type="radio" name="sex" value="1"  title="女" <?php if($user){if($user['sex']==1){echo 'checked';}}?>>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="layui-form-item">
                                     <label for="L_city" class="layui-form-label">城市</label>
                                     <div class="layui-input-inline">
-                                        <input type="text" id="L_city" name="city" autocomplete="off" value=""
+                                        <input type="text" id="L_city" name="city" autocomplete="off" value="<?=$user ? $user['city'] : ''?>"
                                                class="layui-input">
                                     </div>
                                 </div>
@@ -57,29 +57,30 @@
                                     <label for="L_sign" class="layui-form-label">签名</label>
                                     <div class="layui-input-block">
                                         <textarea placeholder="随便写些什么刷下存在感" id="L_sign" name="sign" autocomplete="off"
-                                                  class="layui-textarea" style="height: 80px;"></textarea>
+                                                  class="layui-textarea" style="height: 80px;"><?=$user ? $user['sign'] : ''?></textarea>
                                     </div>
                                 </div>
                                 <div class="layui-form-item">
-                                    <button class="layui-btn" key="set-mine" lay-filter="*" lay-submit>确认修改</button>
+                                    <button class="layui-btn" key="set-mine" lay-submit="" lay-filter="updateUser">确认修改</button>
                                 </div>
+                            </form>
                         </div>
 
                         <div class="layui-form layui-form-pane layui-tab-item">
                             <div class="layui-form-item">
                                 <div class="avatar-add">
                                     <p>建议尺寸168*168，支持jpg、png、gif，最大不能超过50KB</p>
-                                    <button type="button" class="layui-btn upload-img">
+                                    <button type="button" class="layui-btn upload-img" id="upload_img">
                                         <i class="layui-icon">&#xe67c;</i>上传头像
                                     </button>
-                                    <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg">
+                                    <img  id="img_user" src=" <?= $user ? $user['img'] : 'https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg'?>">
                                     <span class="loading"></span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="layui-form layui-form-pane layui-tab-item">
-                            <form action="/user/repass" method="post">
+                            <form  method="post">
                                 <div class="layui-form-item">
                                     <label for="L_nowpass" class="layui-form-label">当前密码</label>
                                     <div class="layui-input-inline">
@@ -103,11 +104,10 @@
                                     </div>
                                 </div>
                                 <div class="layui-form-item">
-                                    <button class="layui-btn" key="set-mine" lay-filter="*" lay-submit>确认修改</button>
+                                    <button class="layui-btn" key="set-mine" lay-filter="updatePass" lay-submit="">确认修改</button>
                                 </div>
                             </form>
                         </div>
-
                         <div class="layui-form layui-form-pane layui-tab-item">
                             <ul class="app-bind">
                                 <li class="fly-msg app-havebind">
@@ -136,4 +136,74 @@
         </div>
     </div>
 </div>
+<script>
+    layui.use(['form','layer','jquery','upload'], function(){
+        var form = layui.form;
+        var upload = layui.upload;
+        var jq = layui.jquery;
+        form.verify({
+            username: function(value, item){
+                if(!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)){
+                    return '用户名不能有特殊字符';
+                }
+                if(/(^\_)|(\__)|(\_+$)/.test(value)){
+                    return '用户名首尾不能出现下划线\'_\'';
+                }
+                if(/^\d+\d+\d$/.test(value)){
+                    return '用户名不能全为数字';
+                }
+            },pass: [
+                /^[\S]{6,12}$/
+                ,'密码必须6到12位，且不能出现空格'
+            ],repass:[
+                /^[\S]{6,12}$/
+                ,'密码必须6到12位，且不能出现空格'
+            ]
+        });
+        //1 - 监听提交
+        form.on('submit(updateUser)', function(data){
+            $.post("/api/user/setuser",data.field,function(res){
+                if(res.code == 1){
+                    layer.msg(res.msg, {time: 2000,icon: 6});
+                }else{
+                    layer.msg(res.msg, {time: 2000,icon: 5});
+                }
+            },'json');
+            return false;
+        });
+        //2 - 监听提交
+        form.on('submit(updatePass)', function(data){
+            $.post("/api/user/setpass",data.field,function(res){
+                if(res.code == 1){
+                    layer.msg(res.msg, {time: 2000,icon: 6});
+                }else{
+                    layer.msg(res.msg, {time: 2000,icon: 5});
+                }
 
+            },'json');
+            return false;
+        });
+        var uploadInst = upload.render({
+            elem: '#upload_img' //绑定元素
+            ,url: '/api/user/setimg', //上传接口
+            before: function(obj) {
+                layer.msg('图片上传中...', {
+                    icon: 16,
+                    shade: 0.01,
+                    time: 0
+                })
+            }
+            ,done: function(res){
+                console.log(res);
+                if(res.info){
+                    jq('#img_user').attr('src',res.savename);
+                }
+                layer.close(layer.msg('上传成功！'));
+
+            }
+            ,error: function(){
+                layer.msg('上传错误！');
+            }
+        });
+    });
+</script>

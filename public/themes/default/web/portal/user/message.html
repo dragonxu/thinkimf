@@ -2,7 +2,55 @@
     <div class="layui-row">
         {include file="user/rightmenu" /}
         <div class="layui-col-lg9">
-            messgae
+            <div class="layui-btn-group demoTable">
+                <button class="layui-btn layui-btn-warm" >添加消息</button>
+            </div>
+            <table class="layui-table" lay-data="{width: 892, height:332, url:'/api/message/list', page:true, id:'idTest'}" lay-filter="message">
+                <thead>
+                <tr>
+                    <th lay-data="{type:'checkbox', fixed: 'left'}"></th>
+                    <th lay-data="{field:'id', width:80, sort: true, fixed: true}">ID</th>
+                    <th lay-data="{field:'classify', width:80}">消息简介</th>
+                    <th lay-data="{field:'username', width:80}">消息内容</th>
+                    <th lay-data="{field:'experience', width:80, sort: true}">消息类型</th>
+                    <th lay-data="{field:'experience', width:80, sort: true}">消息分类</th>
+                    <th lay-data="{field:'sign', width:160}">作者</th>
+                    <th lay-data="{field:'sex', width:80, sort: true}">创建时间</th>
+                    <th lay-data="{field:'city', width:80}">修改时间</th>
+                    <th lay-data="{fixed: 'right', width:178, align:'center', toolbar: '#barTool'}"></th>
+                </tr>
+                </thead>
+            </table>
+
+            <script type="text/html" id="barTool">
+                <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+                <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            </script>
+            <script>
+                layui.use('table', function(){
+                    var table = layui.table;
+                    //监听表格复选框选择
+                    table.on('checkbox(message)', function(obj){
+                        console.log(obj)
+                    });
+                    //监听工具条
+                    table.on('tool(message)', function(obj){
+                        var data = obj.data;
+                        if(obj.event === 'detail'){
+                            layer.msg('ID：'+ data.id + ' 的查看操作');
+                        } else if(obj.event === 'del'){
+                            layer.confirm('真的删除行么', function(index){
+                                obj.del();
+                                layer.close(index);
+                            });
+                        } else if(obj.event === 'edit'){
+                            layer.alert('编辑行：<br>'+ JSON.stringify(data))
+                        }
+                    });
+                });
+            </script>
+
         </div>
     </div>
 </div>

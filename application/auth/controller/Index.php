@@ -92,13 +92,13 @@ class Index extends Base
                     $loginUsername = $phone;
                     $loginPassword = substr(md5($loginEmail), 0, 6);
                 }
-                $api .= "?api_code=imfpwdfghjkdhgadv&action=login&email="
+               /* $api .= "?api_code=imfpwdfghjkdhgadv&action=login&email="
                     . $email . "&password=" . $loginPassword . "&username=" . $loginUsername;
                 $loginInfo = ImfHttpRequest($api);
                 $bbsuid = json_decode($loginInfo, true)['result']['uid'];
-
-                $authCode = BBSauthcode("$loginPassword\t$bbsuid", 'ENCODE');
-                BBSdsetcookie('auth', $authCode, 2596600, "thinkimf_0ce7_", false);
+                $enPwd = md5($loginPassword);
+                $authCode = BBSauthcode("{$enPwd}\t{$bbsuid}", 'ENCODE');
+               BBSdsetcookie('auth', $authCode, 2596600, "thinkimf_0ce7_", false);*/
                 $this->success('登录成功，正在前往', $redirectUrl);
             } else {
                 $this->error('你的账号和密码不匹配！');
@@ -207,14 +207,14 @@ class Index extends Base
                     $loginUsername = $phone;
                     $loginPassword = substr(md5($loginEmail), 0, 6);
                 }
-                $api .= "?api_code=imfpwdfghjkdhgadv&action=login&email="
+             /*   $api .= "?api_code=imfpwdfghjkdhgadv&action=login&email="
                     . $email . "&password=" . $loginPassword . "&username=" . $loginUsername;
                 $loginInfo = ImfHttpRequest($api);
                 $bbsuid = json_decode($loginInfo, true)['result']['uid'];
-
-                $authCode = BBSauthcode("$loginPassword\t$bbsuid", 'ENCODE');
+                $enPwd = md5($loginPassword);
+                $authCode = BBSauthcode("{$enPwd}\t{$bbsuid}", 'ENCODE');
                 BBSdsetcookie('auth', $authCode, 2596600, "thinkimf_0ce7_", false);
-                $this->success('注册成功，正在前往', $redirectUrl);
+            */    $this->success('注册成功，正在前往', $redirectUrl);
             };
         } else {
             return $this->fetch('index/reg', [
@@ -230,8 +230,7 @@ class Index extends Base
         session('userid', null);
         cookie('username', null);
         cookie('userid', null);
-        cookie("thinkimf_0ce7_auth",null);
-        cookie("thinkimf_0ce7_saltkey",null);
+        BBSdsetcookie('auth', uniqueString(6), -1, "thinkimf_0ce7_", false);
         $this->success('退出成功', '/auth/index/login');
     }
 }
