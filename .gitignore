@@ -9,3 +9,4 @@ composer.lock
 composer.lock
 /node_modules
 public/temp
+config/database.php

@@ -20,13 +20,14 @@ return [
     // 数据库类型
     'type'            => 'mysql',
     // 服务器地址
+    // 服务器地址
     'hostname'        => '120.78.150.141',
     // 数据库名
     'database'        => 'imf_dev',
     // 用户名
-    'username'        => 'root',
+    'username'        => 'imf_dev',
     // 密码
-    'password'        => 'udinfo',
+    'password'        => 'mWLs5caWr8',
     // 端口
     'hostport'        => '3306',
     // 连接dsn
